@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
+using StellarEve_API.EveAuthenticationDTO;
 using StellarEve_API.Services;
 using StellarEve_API.Services.EveAuthenticationServiceObjects;
 
@@ -9,7 +10,7 @@ namespace StellarEve_API.Controllers
     {
         // My Endpoints
         protected string AuthorizeCharacterEndpoint;
-        protected string AuthorizeTokensEndpoint;
+        protected string ExchangeCodeForTokensEndpoint;
 
         // My Services
         IEveAuthenticationService eveAuthenticationService;
@@ -18,7 +19,7 @@ namespace StellarEve_API.Controllers
         {
             // Construct My Endpoints
             AuthorizeCharacterEndpoint = EveAuthorizationBaseAddress + "authorize/";
-            AuthorizeTokensEndpoint = EveAuthorizationBaseAddress + "token/";
+            ExchangeCodeForTokensEndpoint = EveAuthorizationBaseAddress + "token/";
 
             // Construct My Services
             eveAuthenticationService = _eveAuthenticationService;
@@ -36,7 +37,25 @@ namespace StellarEve_API.Controllers
                 EveScope = EveScope,
             };
 
-            return Ok(eveAuthenticationService.StartAuthorizeCharacter(serviceRequest));
+            StartAuthorizeCharacterResponse response = eveAuthenticationService.StartAuthorizeCharacter(serviceRequest);
+
+            return response.Success ? Ok(response) : StatusCode(500, response);
+        }
+
+        [HttpPost("authorize/code")] // api/eveauthentication/authorize/code
+        public ActionResult PostAuthorizeCode(PostAuthorizeCodeDTORequest requestDto)
+        {
+            ExchangeAuthorizationCodeForTokensRequest serviceRequest = new ExchangeAuthorizationCodeForTokensRequest()
+            {
+                ExchangeCodeForTokensEndpoint = ExchangeCodeForTokensEndpoint,
+                EveClientId = EveClientId,
+                EveClientSecret = EveClientSecret,
+                AuthorizationCode = requestDto.AuthorizationCode
+            };
+
+            ExchangeAuthorizationCodeForTokensResponse response = eveAuthenticationService.ExchangeAuthorizationCodeForTokens(serviceRequest).Result;
+            
+            return response.Success ? Ok(response) : BadRequest();
         }
     }
 }

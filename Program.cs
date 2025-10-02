@@ -14,6 +14,7 @@ builder.Services.AddRouting(options =>
     options.LowercaseUrls = true;
 });
 
+builder.Services.AddSingleton<HttpClient>();
 builder.Services.AddSingleton<IEveAuthenticationService, EveAuthenticationService>();
 
 var app = builder.Build();
