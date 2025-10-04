@@ -1,12 +1,11 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StellarEve_API.EveAuthenticationDTO;
 using StellarEve_API.Services;
 using StellarEve_API.Services.EveAuthenticationServiceObjects;
 
 namespace StellarEve_API.Controllers
 {
-    public class EveAuthenticationController : EveControllerBase
+    public class AuthenticationController : ControllerBase
     {
         // My Endpoints
         protected string AuthorizeCharacterEndpoint;
@@ -15,7 +14,7 @@ namespace StellarEve_API.Controllers
         // My Services
         IEveAuthenticationService eveAuthenticationService;
 
-        public EveAuthenticationController(IConfiguration _config, IEveAuthenticationService _eveAuthenticationService) : base(_config)
+        public AuthenticationController(IConfiguration _config, IEveAuthenticationService _eveAuthenticationService, IHttpContextAccessor _httpContextAccessor) : base(_config)
         {
             // Construct My Endpoints
             AuthorizeCharacterEndpoint = EveAuthorizationBaseAddress + "authorize/";
@@ -26,8 +25,8 @@ namespace StellarEve_API.Controllers
 
         }
 
-        [HttpGet("authorize/character")] // api/eveauthentication/authorize/character
-        public ActionResult<StartAuthorizeCharacterResponse> GetAuthorizeCharacter()
+        [HttpGet("authorize/character")] // api/authentication/authorize/character
+        public async Task<IActionResult> GetAuthorizeCharacter()
         {
             StartAuthorizeCharacterRequest serviceRequest = new StartAuthorizeCharacterRequest() 
             { 
@@ -37,13 +36,13 @@ namespace StellarEve_API.Controllers
                 EveScope = EveScope,
             };
 
-            StartAuthorizeCharacterResponse response = eveAuthenticationService.StartAuthorizeCharacter(serviceRequest);
+            StartAuthorizeCharacterResponse response = await eveAuthenticationService.StartAuthorizeCharacterAsync(serviceRequest);
 
-            return response.Success ? Ok(response) : StatusCode(500, response);
+            return response.Success ? Ok(response) : BadRequest();
         }
 
-        [HttpPost("authorize/code")] // api/eveauthentication/authorize/code
-        public ActionResult PostAuthorizeCode(PostAuthorizeCodeDTORequest requestDto)
+        [HttpPost("authorize/code")] // api/authentication/authorize/code
+        public async Task<IActionResult> PostAuthorizeCode(PostAuthorizeCodeDTORequest requestDto)
         {
             ExchangeAuthorizationCodeForTokensRequest serviceRequest = new ExchangeAuthorizationCodeForTokensRequest()
             {
@@ -53,7 +52,7 @@ namespace StellarEve_API.Controllers
                 AuthorizationCode = requestDto.AuthorizationCode
             };
 
-            ExchangeAuthorizationCodeForTokensResponse response = eveAuthenticationService.ExchangeAuthorizationCodeForTokens(serviceRequest).Result;
+            ExchangeAuthorizationCodeForTokensResponse response = await eveAuthenticationService.ExchangeAuthorizationCodeForTokensAsync(serviceRequest);
             
             return response.Success ? Ok(response) : BadRequest();
         }

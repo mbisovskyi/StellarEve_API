@@ -14,7 +14,7 @@ namespace StellarEve_API.Services
             http = _http;
         }
 
-        public StartAuthorizeCharacterResponse StartAuthorizeCharacter(StartAuthorizeCharacterRequest request)
+        public async Task<StartAuthorizeCharacterResponse> StartAuthorizeCharacterAsync(StartAuthorizeCharacterRequest request)
         {
             StartAuthorizeCharacterResponse myResponse = new StartAuthorizeCharacterResponse();
             string callbackCode;
@@ -47,7 +47,7 @@ namespace StellarEve_API.Services
             return myResponse;
         }
 
-        public async Task<ExchangeAuthorizationCodeForTokensResponse> ExchangeAuthorizationCodeForTokens(ExchangeAuthorizationCodeForTokensRequest request)
+        public async Task<ExchangeAuthorizationCodeForTokensResponse> ExchangeAuthorizationCodeForTokensAsync(ExchangeAuthorizationCodeForTokensRequest request)
         {
             ExchangeAuthorizationCodeForTokensResponse myResponse = new ExchangeAuthorizationCodeForTokensResponse();
             string credentials;

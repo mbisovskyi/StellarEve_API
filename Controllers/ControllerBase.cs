@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 
 namespace StellarEve_API.Controllers
 {
-    public class EveControllerBase : BaseApiController
+    public class ControllerBase : BaseApiController
     {
         protected string ClientBaseAddress;
         protected string EveAuthorizationBaseAddress;
@@ -10,7 +11,7 @@ namespace StellarEve_API.Controllers
         protected string EveClientSecret;
         protected string EveScope;
 
-        public EveControllerBase(IConfiguration _config) 
+        public ControllerBase(IConfiguration _config) 
         {
             ClientBaseAddress = _config.GetValue<string>("ClientBaseAddress") ?? String.Empty;
             EveAuthorizationBaseAddress = _config.GetValue<string>("EveAuthorizationBaseAddress") ?? String.Empty;

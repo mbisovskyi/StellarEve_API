@@ -1,4 +1,6 @@
-using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using StellarEve_API.Extensions;
 using StellarEve_API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,8 +16,8 @@ builder.Services.AddRouting(options =>
     options.LowercaseUrls = true;
 });
 
-builder.Services.AddSingleton<HttpClient>();
-builder.Services.AddSingleton<IEveAuthenticationService, EveAuthenticationService>();
+builder.Services.AddApplicationServices();
+builder.Services.AddIdentityServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -30,6 +32,7 @@ app.UseHttpsRedirection();
 
 app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
