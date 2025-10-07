@@ -1,8 +1,8 @@
 ﻿using StellarEve_API.Services.CharacterServiceObjects;
 
-namespace StellarEve_API.Services
+namespace StellarEve_API.Services.EveServices
 {
-    public interface ICharacterService
+    public interface IEveCharacterService
     {
         Task<AuthorizedCharacterInfoResponse> GetAuthorizedCharacterInfo();
     }

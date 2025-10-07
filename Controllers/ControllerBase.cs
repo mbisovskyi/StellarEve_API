@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
-
-namespace StellarEve_API.Controllers
+﻿namespace StellarEve_API.Controllers
 {
-    public class ControllerBase : BaseApiController
+    public class ControllerBase : ApiController
     {
         protected string ClientBaseAddress;
         protected string EveAuthorizationBaseAddress;

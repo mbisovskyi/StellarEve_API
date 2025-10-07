@@ -13,11 +13,7 @@ namespace StellarEve_API.Extensions
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = true,
-                    ValidAudiences = new[] {
-                    // Your application's client ID goes here
-                    config.GetValue<string>("EveClientId"),
-                    "EVE Online"
-            },
+                    ValidAudiences = new[] { config.GetValue<string>("EveClientId"), "EVE Online" },
                     ValidateIssuer = true,
                     ValidIssuer = config.GetValue<string>("EveValidIssuer")
                 };

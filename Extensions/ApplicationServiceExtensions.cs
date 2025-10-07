@@ -1,4 +1,4 @@
-﻿using StellarEve_API.Services;
+﻿using StellarEve_API.Services.EveServices;
 
 namespace StellarEve_API.Extensions
 {
@@ -9,7 +9,7 @@ namespace StellarEve_API.Extensions
             services.AddSingleton<HttpClient>();
             services.AddHttpContextAccessor();
             services.AddSingleton<IEveAuthenticationService, EveAuthenticationService>();
-            services.AddSingleton<ICharacterService, CharacterService>();
+            services.AddSingleton<IEveCharacterService, EveCharacterService>();
 
             return services;
         }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StellarEve_API.EveAuthenticationDTO;
-using StellarEve_API.Services;
 using StellarEve_API.Services.EveAuthenticationServiceObjects;
+using StellarEve_API.Services.EveServices;
 
 namespace StellarEve_API.Controllers
 {

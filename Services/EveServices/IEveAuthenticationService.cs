@@ -1,6 +1,6 @@
 ﻿using StellarEve_API.Services.EveAuthenticationServiceObjects;
 
-namespace StellarEve_API.Services
+namespace StellarEve_API.Services.EveServices
 {
     public interface IEveAuthenticationService
     {

@@ -1,8 +1,9 @@
-﻿using StellarEve_API.Services.EveAuthenticationServiceObjects;
+﻿using StellarEve_API.Services.AppServices;
+using StellarEve_API.Services.EveAuthenticationServiceObjects;
 using StellarEve_API.Utilities;
 using System.Text.Json;
 
-namespace StellarEve_API.Services
+namespace StellarEve_API.Services.EveServices
 {
     public class EveAuthenticationService : IEveAuthenticationService
     {
@@ -50,24 +51,11 @@ namespace StellarEve_API.Services
         public async Task<ExchangeAuthorizationCodeForTokensResponse> ExchangeAuthorizationCodeForTokensAsync(ExchangeAuthorizationCodeForTokensRequest request)
         {
             ExchangeAuthorizationCodeForTokensResponse myResponse = new ExchangeAuthorizationCodeForTokensResponse();
-            string credentials;
-            byte[] credentialsBytes;
-            string base64Credentials;
-            string authorizationHeader;
             Dictionary<string, string> data;
 
             try
             {
-                // Prepare Basic Auth Header
-                credentials = $"{request.EveClientId}:{request.EveClientSecret}";
-                credentialsBytes = System.Text.Encoding.UTF8.GetBytes(credentials);
-                base64Credentials = Convert.ToBase64String(credentialsBytes);
-                authorizationHeader = $"Basic {base64Credentials}";
-
-                // Clear is needed to avoid adding multiple headers as it will error out!
-                http.DefaultRequestHeaders.Clear();
-                http.DefaultRequestHeaders.Add("Authorization", authorizationHeader);
-
+                AuthorizationService.AddBasicAuthorizationHeader(http, request.EveClientId, request.EveClientSecret);
                 // Post to Eve's token endpoint
                 data = new Dictionary<string, string>
                 {
