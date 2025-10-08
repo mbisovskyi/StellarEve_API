@@ -15,7 +15,7 @@ namespace StellarEve_API.Controllers
 
         [Authorize]
         [HttpGet("verify")] // api/character/verify
-        public async Task<IActionResult> VerifyAuthorizedCharacter()
+        public async Task<IActionResult> GetAuthorizedCharacterInfo()
         {
             AuthorizedCharacterInfoResponse response = await characterService.GetAuthorizedCharacterInfo();
             return response.Success ? Ok(response) : BadRequest(response);

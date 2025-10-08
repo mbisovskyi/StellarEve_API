@@ -26,7 +26,7 @@ namespace StellarEve_API.Services.EveServices
                 callbackCode = Strings.GetRandomString(10);
                 navigateToAddress = request.AuthorizeCharacterEndpoint +
                     $"?response_type=code" +
-                    $"&redirect_uri={request.ClientBaseAddress}eve-auth" +
+                    $"&redirect_uri={request.ClientBaseAddress}" +
                     $"&client_id={request.EveClientId}" +
                     $"&scope={request.EveScope}" +
                     $"&state={callbackCode}";
