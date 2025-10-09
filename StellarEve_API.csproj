@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="DTO\EveAuthenticationDTO.cs~RF32ac937e.TMP" />
     <None Remove="Services\AppServices\AuthorizationService.cs~RF2d78baea.TMP" />
     <None Remove="Services\ICharacterService.cs~RF19decf45.TMP" />
   </ItemGroup>

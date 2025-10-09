@@ -1,4 +1,5 @@
 ﻿using StellarEve_API.Services.AppServices;
+using StellarEve_API.Services.CharacterServiceObjects;
 using StellarEve_API.Services.EveAuthenticationServiceObjects;
 using StellarEve_API.Utilities;
 using System.Text.Json;
@@ -9,15 +10,17 @@ namespace StellarEve_API.Services.EveServices
     {
 
         private readonly HttpClient http;
+        private readonly IEveCharacterService eveCharacterService;
 
-        public EveAuthenticationService(HttpClient _http)
+        public EveAuthenticationService(HttpClient _http, IEveCharacterService _eveCharacterService)
         {
             http = _http;
+            eveCharacterService = _eveCharacterService;
         }
 
-        public async Task<StartAuthorizeCharacterResponse> StartAuthorizeCharacterAsync(StartAuthorizeCharacterRequest request)
+        public async Task<ProcessEveAuthorizationCodesResponse> ProcessEveAuthorizationCodesAsync(ProcessEveAuthorizationCodesRequest request)
         {
-            StartAuthorizeCharacterResponse myResponse = new StartAuthorizeCharacterResponse();
+            ProcessEveAuthorizationCodesResponse myResponse = new ProcessEveAuthorizationCodesResponse();
             string callbackCode;
             string navigateToAddress;
 
@@ -39,7 +42,7 @@ namespace StellarEve_API.Services.EveServices
             catch (Exception exception)
             {
                 // Reseting response object, so no data is exposed due to exception.
-                myResponse = new StartAuthorizeCharacterResponse();
+                myResponse = new ProcessEveAuthorizationCodesResponse();
                 myResponse.Success = false;
                 myResponse.Error = exception.Message;
                 myResponse.StackTrace = exception.StackTrace;
@@ -48,9 +51,9 @@ namespace StellarEve_API.Services.EveServices
             return myResponse;
         }
 
-        public async Task<ExchangeAuthorizationCodeForTokensResponse> ExchangeAuthorizationCodeForTokensAsync(ExchangeAuthorizationCodeForTokensRequest request)
+        public async Task<ProcessAuthorizeCharacterResponse> ProcessAuthorizeCharacterAsync(ProcessAuthorizeCharacterRequest request)
         {
-            ExchangeAuthorizationCodeForTokensResponse myResponse = new ExchangeAuthorizationCodeForTokensResponse();
+            ProcessAuthorizeCharacterResponse myResponse = new ProcessAuthorizeCharacterResponse();
             Dictionary<string, string> data;
 
             try
@@ -71,12 +74,20 @@ namespace StellarEve_API.Services.EveServices
 
                     if (deserializedTokens != null)
                     {
-                        // Compile myResponse
-                        myResponse.Success = true;
-                        myResponse.AccessToken = deserializedTokens.AccessToken;
-                        myResponse.ExpiresIn = deserializedTokens.ExpiresIn;
-                        myResponse.TokenType = deserializedTokens.TokenType;
-                        myResponse.RefreshToken = deserializedTokens.RefreshToken;
+                        AuthorizedCharacterInfoResponse authorizedCharacterResponse = this.eveCharacterService.GetAuthorizedCharacterInfoAsync(deserializedTokens.AccessToken).Result;
+
+                        if (authorizedCharacterResponse != null)
+                        {
+
+                            // Compile myResponse
+                            myResponse.CharacterId = authorizedCharacterResponse.CharacterID;
+                            myResponse.CharacterName = authorizedCharacterResponse.CharacterName;
+                            myResponse.ExpiresOn = authorizedCharacterResponse.ExpiresOn;
+                            myResponse.AccessToken = deserializedTokens.AccessToken;
+                            myResponse.TokenType = deserializedTokens.TokenType;
+                            myResponse.RefreshToken = deserializedTokens.RefreshToken;
+                            myResponse.Success = true;
+                        }
                     }
                 } else
                 {
@@ -86,7 +97,7 @@ namespace StellarEve_API.Services.EveServices
             catch (Exception exception)
             {
                 // Reseting response object, so no data is exposed due to exception.
-                myResponse = new ExchangeAuthorizationCodeForTokensResponse();
+                myResponse = new ProcessAuthorizeCharacterResponse();
                 myResponse.Success = false;
                 myResponse.Error = exception.Message;
                 myResponse.StackTrace = exception.StackTrace;

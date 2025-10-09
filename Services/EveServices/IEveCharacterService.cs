@@ -4,6 +4,6 @@ namespace StellarEve_API.Services.EveServices
 {
     public interface IEveCharacterService
     {
-        Task<AuthorizedCharacterInfoResponse> GetAuthorizedCharacterInfo();
+        Task<AuthorizedCharacterInfoResponse> GetAuthorizedCharacterInfoAsync(string? accessToken);
     }
 }

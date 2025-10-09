@@ -2,7 +2,7 @@
 
 namespace StellarEve_API.EveAuthenticationDTO
 {
-    public class PostAuthorizeCodeDTORequest
+    public class AuthorizeCharacterRequestDto
     {
         [Required]
         public string AuthorizationCode { get; set; }

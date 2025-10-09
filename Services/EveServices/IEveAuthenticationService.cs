@@ -4,7 +4,7 @@ namespace StellarEve_API.Services.EveServices
 {
     public interface IEveAuthenticationService
     {
-        Task<StartAuthorizeCharacterResponse> StartAuthorizeCharacterAsync(StartAuthorizeCharacterRequest request);
-        Task<ExchangeAuthorizationCodeForTokensResponse> ExchangeAuthorizationCodeForTokensAsync(ExchangeAuthorizationCodeForTokensRequest request);
+        Task<ProcessEveAuthorizationCodesResponse> ProcessEveAuthorizationCodesAsync(ProcessEveAuthorizationCodesRequest request);
+        Task<ProcessAuthorizeCharacterResponse> ProcessAuthorizeCharacterAsync(ProcessAuthorizeCharacterRequest request);
     }
 }

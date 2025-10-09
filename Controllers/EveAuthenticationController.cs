@@ -5,7 +5,7 @@ using StellarEve_API.Services.EveServices;
 
 namespace StellarEve_API.Controllers
 {
-    public class AuthenticationController : ControllerBase
+    public class EveAuthenticationController : ControllerBase
     {
         // My Endpoints
         protected string AuthorizeCharacterEndpoint;
@@ -14,7 +14,7 @@ namespace StellarEve_API.Controllers
         // My Services
         IEveAuthenticationService eveAuthenticationService;
 
-        public AuthenticationController(IConfiguration _config, IEveAuthenticationService _eveAuthenticationService, IHttpContextAccessor _httpContextAccessor) : base(_config)
+        public EveAuthenticationController(IConfiguration _config, IEveAuthenticationService _eveAuthenticationService, IHttpContextAccessor _httpContextAccessor) : base(_config)
         {
             // Construct My Endpoints
             AuthorizeCharacterEndpoint = EveAuthorizationBaseAddress + "authorize/";
@@ -25,10 +25,10 @@ namespace StellarEve_API.Controllers
 
         }
 
-        [HttpGet("authorize/character")] // api/authentication/authorize/character
-        public async Task<IActionResult> GetAuthorizeCharacter()
+        [HttpGet("authorization_codes")] // api/eveauthentication/authorization_codes
+        public async Task<IActionResult> GetEveAuthorizationCodes()
         {
-            StartAuthorizeCharacterRequest serviceRequest = new StartAuthorizeCharacterRequest() 
+            ProcessEveAuthorizationCodesRequest serviceRequest = new ProcessEveAuthorizationCodesRequest() 
             { 
                 ClientBaseAddress = ClientBaseAddress, 
                 AuthorizeCharacterEndpoint = AuthorizeCharacterEndpoint,
@@ -36,15 +36,15 @@ namespace StellarEve_API.Controllers
                 EveScope = EveScope,
             };
 
-            StartAuthorizeCharacterResponse response = await eveAuthenticationService.StartAuthorizeCharacterAsync(serviceRequest);
+            ProcessEveAuthorizationCodesResponse response = await eveAuthenticationService.ProcessEveAuthorizationCodesAsync(serviceRequest);
 
             return response.Success ? Ok(response) : BadRequest();
         }
 
-        [HttpPost("authorize/code")] // api/authentication/authorize/code
-        public async Task<IActionResult> PostAuthorizeCode(PostAuthorizeCodeDTORequest requestDto)
+        [HttpPost("authorize_character")] // api/eveauthentication/authorize_character
+        public async Task<IActionResult> AuthorizeCharacter(AuthorizeCharacterRequestDto requestDto)
         {
-            ExchangeAuthorizationCodeForTokensRequest serviceRequest = new ExchangeAuthorizationCodeForTokensRequest()
+            ProcessAuthorizeCharacterRequest serviceRequest = new ProcessAuthorizeCharacterRequest()
             {
                 ExchangeCodeForTokensEndpoint = ExchangeCodeForTokensEndpoint,
                 EveClientId = EveClientId,
@@ -52,7 +52,7 @@ namespace StellarEve_API.Controllers
                 AuthorizationCode = requestDto.AuthorizationCode
             };
 
-            ExchangeAuthorizationCodeForTokensResponse response = await eveAuthenticationService.ExchangeAuthorizationCodeForTokensAsync(serviceRequest);
+            ProcessAuthorizeCharacterResponse response = await eveAuthenticationService.ProcessAuthorizeCharacterAsync(serviceRequest);
             
             return response.Success ? Ok(response) : BadRequest();
         }

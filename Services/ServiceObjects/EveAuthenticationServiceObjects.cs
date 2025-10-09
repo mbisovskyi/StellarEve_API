@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace StellarEve_API.Services.EveAuthenticationServiceObjects
 {
-    public class StartAuthorizeCharacterRequest
+    public class ProcessEveAuthorizationCodesRequest
     {
         [Required]
         public string ClientBaseAddress { get; set; }
@@ -16,7 +16,7 @@ namespace StellarEve_API.Services.EveAuthenticationServiceObjects
         public string EveScope { get; set; }
     }
 
-    public class StartAuthorizeCharacterResponse : ServiceBaseResponse 
+    public class ProcessEveAuthorizationCodesResponse : ServiceBaseResponse 
     {
         [Required]
         public string NavigateToAddress { get; set; }
@@ -24,7 +24,7 @@ namespace StellarEve_API.Services.EveAuthenticationServiceObjects
         public string CallbackCode { get; set; }
     }
 
-    public class ExchangeAuthorizationCodeForTokensRequest
+    public class ProcessAuthorizeCharacterRequest
     {
         [Required]
         public string ExchangeCodeForTokensEndpoint { get; set; }
@@ -36,16 +36,20 @@ namespace StellarEve_API.Services.EveAuthenticationServiceObjects
         public string AuthorizationCode { get; set; }
     }
 
-    public class ExchangeAuthorizationCodeForTokensResponse : ServiceBaseResponse
+    public class ProcessAuthorizeCharacterResponse : ServiceBaseResponse
     {
         [Required]
-        public string AccessToken { get; set; }
+        public int CharacterId { get; set; }
         [Required]
-        public int ExpiresIn { get; set; }
+        public string CharacterName { get; set; }
+        [Required]
+        public string AccessToken { get; set; }
         [Required]
         public string TokenType { get; set; }
         [Required]
         public string RefreshToken { get; set; }
+        [Required]
+        public DateTime ExpiresOn { get; set; }
     }
 
     public class TokensSerializationObject

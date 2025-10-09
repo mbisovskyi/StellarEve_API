@@ -14,15 +14,18 @@ namespace StellarEve_API.Services.EveServices
             http = _http;
         }
 
-        public async Task<AuthorizedCharacterInfoResponse?> GetAuthorizedCharacterInfo()
+        public async Task<AuthorizedCharacterInfoResponse?> GetAuthorizedCharacterInfoAsync(string? accessToken)
         {
-            string? accessToken;
             HttpResponseMessage httpResponse;
             AuthorizedCharacterInfoResponse? response = new AuthorizedCharacterInfoResponse();
 
             try
             {
-                accessToken = AuthorizationService.RetrieveAccessTokenFromHttpContextAsync().Result;
+                if (string.IsNullOrWhiteSpace(accessToken))
+                {
+                    accessToken = AuthorizationService.RetrieveAccessTokenFromHttpContextAsync().Result;
+                }
+
                 if (accessToken != null)
                 {
                     AuthorizationService.AddBearerAuthorizationHeader(http, accessToken);
